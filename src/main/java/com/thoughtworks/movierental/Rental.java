@@ -2,45 +2,33 @@ package com.thoughtworks.movierental;
 
 public class Rental {
 
-    private final int BONUS_FREQUENT_RENTER_POINT = 2;
-    private final int FREQUENT_RENTER_POINT = 1;
+    private final int BONUSNOTAPPLICABLE = 1;
+    private final int NEW_RELEASE_BONUS = 2;
+    private final int BLURAY_BONUS = 3;
+
     private int daysRented;
-    Movie movie;
+    private Movie movie;
 
     public Rental(Movie movie, int daysRented) {
         this.movie = movie;
         this.daysRented = daysRented;
     }
 
-    public int getDaysRented() {
-        return daysRented;
+    public Movie getMovie() {
+        return movie;
     }
 
     public double amount() {
-        double totalAmount = 0;
-        switch (movie.getMovie().getPriceCode()) {
-            case Movie.REGULAR:
-                totalAmount += 2;
-                if (daysRented > 2)
-                    totalAmount += (daysRented - 2) * 1.5;
-                break;
-            case Movie.NEW_RELEASE:
-                totalAmount += daysRented * 3;
-                break;
-            case Movie.CHILDRENS:
-                totalAmount += 1.5;
-                if (daysRented > 3)
-                    totalAmount += (daysRented - 3) * 1.5;
-                break;
+        return movie.price().amount(daysRented);
+    }
+
+    public int frequentRenter() {
+        if(movie.isNewRelease()) {
+            return daysRented > 1 ? NEW_RELEASE_BONUS : BONUSNOTAPPLICABLE;
+        } else if(movie.isBlueRay()) {
+            return BLURAY_BONUS;
+        } else {
+            return BONUSNOTAPPLICABLE;
         }
-        return totalAmount;
-    }
-
-    int frequentRenterPoints() {
-        return isBonusApplicable() ? BONUS_FREQUENT_RENTER_POINT : FREQUENT_RENTER_POINT;
-    }
-
-    private boolean isBonusApplicable() {
-        return movie.isNewRelease() && getDaysRented() > 1;
     }
 }

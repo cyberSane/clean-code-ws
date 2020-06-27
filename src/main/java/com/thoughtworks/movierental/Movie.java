@@ -1,12 +1,14 @@
 package com.thoughtworks.movierental;
 
 public class Movie {
-    public static final int CHILDRENS = 2;
     public static final int REGULAR = 0;
     public static final int NEW_RELEASE = 1;
+    public static final int CHILDRENS = 2;
+    public static final int BLURAY = 3;
 
     private String title;
     private int priceCode;
+    private boolean blueRay;
 
     public Movie(String title, int priceCode) {
         this.title = title;
@@ -25,11 +27,26 @@ public class Movie {
         return title;
     }
 
-    public boolean isNewRelease() {
+    boolean isNewRelease() {
         return priceCode == Movie.NEW_RELEASE;
     }
 
-    public Movie getMovie() {
-        return this;
+    public boolean isBlueRay() {
+        return priceCode == Movie.BLURAY;
+    }
+
+    public Price price() {
+        switch (getPriceCode()) {
+            case REGULAR:
+                return new RegularPrice();
+            case NEW_RELEASE:
+                return new NewReleasePrice();
+            case CHILDRENS:
+                return new ChildrenPrice();
+            case BLURAY:
+                return new BluRayPrice();
+            default:
+                return new DefaultPrice();
+        }
     }
 }

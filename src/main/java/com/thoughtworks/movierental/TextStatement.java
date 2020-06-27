@@ -3,40 +3,36 @@ package com.thoughtworks.movierental;
 import java.util.List;
 
 public class TextStatement {
-    private final String customerName;
-    private final double totalAmount;
-    private final int totalFrequentRenters;
-    private final List<Rental> rentals;
+    private final String name;
+    private Rentals rentals;
 
-    public TextStatement(String customerName, double totalAmount, int totalFrequentRenters, List<Rental> rentals) {
-        this.customerName = customerName;
-        this.totalAmount = totalAmount;
-        this.totalFrequentRenters = totalFrequentRenters;
+    public TextStatement(String name, Rentals rentals) {
+        this.name = name;
         this.rentals = rentals;
     }
 
-    public String statement() {
-        return header() + body() + footer();
+    public String createStatement() {
+        return textHeader() + textBody() + textFooter();
     }
 
-    String header() {
-        return "Rental Record for " + customerName + "\n";
+    String textHeader() {
+        String header = "";
+        header = "Rental Record for " + name + "\n";
+        return header;
     }
 
-    String footer() {
-        String result = "Amount owed is " + totalAmount + "\n";
-        result += "You earned " + totalFrequentRenters
-                + " frequent renter points";
-        return result;
-    }
-
-    String body() {
-        String result = "";
-        for (Rental rental : rentals) {
-            //show figures for this rental
-            result += "\t" + rental.movie.getMovie().getTitle() + "\t" + rental.amount() + "\n";
+    String textBody() {
+        String body = "";
+        for (Rental rental : rentals.rentals) {
+            body += "\t" + rental.getMovie().getTitle() + "\t" + rental.amount() + "\n";
         }
+        return body;
+    }
 
-        return result;
+    String textFooter() {
+        String footer = "";
+        footer += "Amount owed is " + rentals.totalAmount() + "\n";
+        footer += "You earned " + rentals.totalFrequentRenters() + " frequent renter points";
+        return footer;
     }
 }
